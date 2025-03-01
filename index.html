@@ -3,120 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes</title>
+    <title>Docking Guide</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
+            margin: 0;
             padding: 20px;
-            background-color: #f4f4f4;
+            background-color: #121212;
+            color: #e0e0e0;
         }
-        .note-container {
-            max-width: 800px; /* Increased width for better readability */
-            background: white;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #1e1e1e;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
-        .note {
-            margin-bottom: 15px;
-            padding: 10px;
-            border-left: 4px solid #007bff;
-            background: #e9f5ff;
+        h1, h2 {
+            color: #bb86fc;
+        }
+        a {
+            color: #03dac6;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
         }
         pre {
-            white-space: pre-wrap; /* Ensures text wraps properly */
-            font-family: Arial, sans-serif;
-            margin: 0;
+            background-color: #2d2d2d;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        code {
+            font-family: Consolas, monospace;
+            color: #ff79c6;
+        }
+        .note {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-left: 4px solid #bb86fc;
+            background-color: #2d2d2d;
         }
     </style>
 </head>
 <body>
-    <div class="note-container">
-        <h2>Step-by-step guide for docking in AutoDock</h2>
+    <div class="container">
+        <h1>Step-by-Step Guide for Docking in AutoDock</h1>
         <div class="note">
+            <h2>1. Install Required Software</h2>
+            <p>Download & install:</p>
+            <ul>
+                <li>AutoDock Tools (ADT) 1.5.7 → Used for structure preparation.</li>
+                <li>AutoDock Vina → Performs the actual docking.</li>
+                <li>Chimera → (Optional) Used for cleaning structures.</li>
+            </ul>
+            <p>Download Links:</p>
+            <ul>
+                <li>AutoDock Tools & Vina: <a href="http://autodock.scripps.edu/" target="_blank">http://autodock.scripps.edu/</a></li>
+                <li>Chimera: <a href="https://www.cgl.ucsf.edu/chimera/" target="_blank">https://www.cgl.ucsf.edu/chimera/</a></li>
+            </ul>
+        </div>
+
+        <div class="note">
+            <h2>2. Prepare PETase (Protein) Structure</h2>
+            <h3>Step 2.1: Get PETase Structure</h3>
+            <ul>
+                <li>Download the PDB file for PETase from RCSB PDB (<a href="https://www.rcsb.org/" target="_blank">https://www.rcsb.org/</a>)</li>
+                <li>Example: Search "PETase" and choose a relevant structure (e.g., PDB ID: 5XJH).</li>
+            </ul>
+            <h3>Step 2.2: Clean PETase Using Chimera</h3>
             <pre>
-Step-by-Step Guide for Docking in AutoDock
-We will dock PETase (protein) with PET fragments (ligand) using AutoDock Tools (ADT) and AutoDock Vina.
+1. Open Chimera → File → Open PETase PDB file.
+2. Remove water molecules: Select → Residue → Type HOH → Delete.
+3. Remove other ligands (if present): Select unwanted molecules and delete.
+4. Add missing hydrogens: Tools → Structure Editing → Add Hydrogens.
+5. Save cleaned protein: File → Save As → PETase_clean.pdb
+            </pre>
+            <p><strong>Why do this?</strong></p>
+            <ul>
+                <li>Water molecules interfere with docking.</li>
+                <li>Adding hydrogens ensures correct binding interactions.</li>
+            </ul>
+        </div>
 
-📌 1. Install Required Software
-🔹 Download & install:
-✅ AutoDock Tools (ADT) 1.5.7 → Used for structure preparation.
-✅ AutoDock Vina → Performs the actual docking.
-✅ Chimera → (Optional) Used for cleaning structures.
+        <div class="note">
+            <h2>3. Prepare Ligand (PET Fragment) Structure</h2>
+            <h3>Step 3.1: Get the Ligand Structure</h3>
+            <p>You need a PET fragment, such as:</p>
+            <ul>
+                <li>BHET (Bis(2-hydroxyethyl) terephthalate)</li>
+                <li>MHET (Mono(2-hydroxyethyl) terephthalate)</li>
+            </ul>
+            <p><strong>Sources:</strong></p>
+            <ul>
+                <li>Search PubChem (<a href="https://pubchem.ncbi.nlm.nih.gov/" target="_blank">https://pubchem.ncbi.nlm.nih.gov/</a>)</li>
+                <li>Download in SDF or PDB format</li>
+            </ul>
+            <h3>Step 3.2: Convert Ligand to PDB Format</h3>
+            <p>If your ligand is in SDF format, use Open Babel to convert it to PDB:</p>
+            <pre><code>obabel ligand.sdf -O ligand.pdb</code></pre>
+            <h3>Step 3.3: Optimize Ligand in Chimera</h3>
+            <pre>
+1. Open ligand.pdb in Chimera.
+2. Add hydrogens: Tools → Structure Editing → Add Hydrogens.
+3. Minimize energy (to get a stable conformation): Tools → Structure Editing → Minimize Structure.
+4. Save the optimized ligand.pdb.
+            </pre>
+        </div>
 
-📌 Download Links:
-• AutoDock Tools & Vina: <a href="http://autodock.scripps.edu/" target="_blank">http://autodock.scripps.edu/</a>
-• Chimera: <a href="https://www.cgl.ucsf.edu/chimera/" target="_blank">https://www.cgl.ucsf.edu/chimera/</a>
+        <div class="note">
+            <h2>4. Convert Structures to PDBQT Format (AutoDock Format)</h2>
+            <h3>Step 4.1: Convert PETase to PDBQT (Using AutoDock Tools)</h3>
+            <pre>
+1. Open AutoDock Tools (ADT) → Load PETase_clean.pdb.
+2. Add Hydrogens → Edit → Add Hydrogens (Polar Only).
+3. Assign Gasteiger Charges → Edit → Charges → Add Gasteiger.
+4. Remove water molecules (if not already done).
+5. Save as PETase.pdbqt.
+            </pre>
+            <h3>Step 4.2: Convert Ligand to PDBQT</h3>
+            <pre>
+1. Open ADT → Load ligand.pdb.
+2. Add Hydrogens → Edit → Add Hydrogens.
+3. Add Torsion Flexibility: Grid → Set Number of Rotatable Bonds → Adjust torsions.
+4. Save as ligand.pdbqt.
+            </pre>
+        </div>
 
-📌 2. Prepare PETase (Protein) Structure
-🔹 Step 2.1: Get PETase Structure
-• Download the PDB file for PETase from RCSB PDB (<a href="https://www.rcsb.org/" target="_blank">https://www.rcsb.org/</a>)
-• Example: Search "PETase" and choose a relevant structure (e.g., PDB ID: 5XJH).
-
-🔹 Step 2.2: Clean PETase Using Chimera
-1️⃣ Open Chimera → File → Open PETase PDB file.
-2️⃣ Remove water molecules:
-   • Select → Residue → Type HOH → Delete.
-3️⃣ Remove other ligands (if present):
-   • Select unwanted molecules and delete.
-4️⃣ Add missing hydrogens:
-   • Tools → Structure Editing → Add Hydrogens.
-5️⃣ Save cleaned protein:
-   • File → Save As → PETase_clean.pdb
-
-📌 Why do this?
-• Water molecules interfere with docking.
-• Adding hydrogens ensures correct binding interactions.
-
-📌 3. Prepare Ligand (PET Fragment) Structure
-🔹 Step 3.1: Get the Ligand Structure
-You need a PET fragment, such as:
-• BHET (Bis(2-hydroxyethyl) terephthalate)
-• MHET (Mono(2-hydroxyethyl) terephthalate)
-
-📌 Sources:
-• Search PubChem (<a href="https://pubchem.ncbi.nlm.nih.gov/" target="_blank">https://pubchem.ncbi.nlm.nih.gov/</a>)
-• Download in SDF or PDB format
-
-🔹 Step 3.2: Convert Ligand to PDB Format
-If your ligand is in SDF format, use Open Babel to convert it to PDB:
-<code>obabel ligand.sdf -O ligand.pdb</code>
-
-🔹 Step 3.3: Optimize Ligand in Chimera
-1️⃣ Open ligand.pdb in Chimera.
-2️⃣ Add hydrogens: Tools → Structure Editing → Add Hydrogens.
-3️⃣ Minimize energy (to get a stable conformation):
-   • Tools → Structure Editing → Minimize Structure.
-4️⃣ Save the optimized ligand.pdb.
-
-📌 4. Convert Structures to PDBQT Format (AutoDock Format)
-🔹 Step 4.1: Convert PETase to PDBQT (Using AutoDock Tools)
-1️⃣ Open AutoDock Tools (ADT) → Load PETase_clean.pdb.
-2️⃣ Add Hydrogens → Edit → Add Hydrogens (Polar Only).
-3️⃣ Assign Gasteiger Charges → Edit → Charges → Add Gasteiger.
-4️⃣ Remove water molecules (if not already done).
-5️⃣ Save as PETase.pdbqt.
-
-🔹 Step 4.2: Convert Ligand to PDBQT
-1️⃣ Open ADT → Load ligand.pdb.
-2️⃣ Add Hydrogens → Edit → Add Hydrogens.
-3️⃣ Add Torsion Flexibility:
-   • Grid → Set Number of Rotatable Bonds → Adjust torsions.
-4️⃣ Save as ligand.pdbqt.
-
-📌 5. Set Up Docking Grid Box
-🔹 Step 5.1: Define the Binding Site
-1️⃣ In ADT, Load PETase.pdbqt.
-2️⃣ Go to Grid → Grid Box.
-3️⃣ Adjust X, Y, Z coordinates to cover PETase's active site.
+        <div class="note">
+            <h2>5. Set Up Docking Grid Box</h2>
+            <h3>Step 5.1: Define the Binding Site</h3>
+            <pre>
+1. In ADT, Load PETase.pdbqt.
+2. Go to Grid → Grid Box.
+3. Adjust X, Y, Z coordinates to cover PETase’s active site.
    • Center should be around key catalytic residues.
-4️⃣ Save the config.txt file with grid box dimensions.
+4. Save the config.txt file with grid box dimensions.
+            </pre>
+        </div>
 
-📌 6. Run Docking with AutoDock Vina
-🔹 Step 6.1: Prepare Configuration File (config.txt)
-Create a text file with the following content:
-<code>
+        <div class="note">
+            <h2>6. Run Docking with AutoDock Vina</h2>
+            <h3>Step 6.1: Prepare Configuration File (config.txt)</h3>
+            <p>Create a text file with the following content:</p>
+            <pre><code>
 receptor = PETase.pdbqt
 ligand = ligand.pdbqt
 center_x = 10.5
@@ -128,53 +162,67 @@ size_z = 20
 exhaustiveness = 8
 num_modes = 9
 energy_range = 4
-</code>
-
-📌 Modify center_x, center_y, center_z based on your active site coordinates.
-
-🔹 Step 6.2: Run Docking Command
-Run the following command in command prompt (Windows) or terminal (Linux/Mac):
-<code>vina --config config.txt --log docking.log</code>
-
-📌 What happens here?
-• AutoDock Vina docks the ligand into PETase’s binding site.
-• Outputs the best binding pose and its binding energy (kcal/mol).
-
-📌 7. Analyze Docking Results
-🔹 Step 7.1: Check Output Files
-AutoDock Vina produces:
-• docking.pdbqt → Best docked pose.
-• docking.log → Binding energy for each pose.
-
-🔹 Step 7.2: Open in Chimera for Visualization
-1️⃣ Open Chimera → Load PETase_clean.pdb.
-2️⃣ Load docking.pdbqt → Align with PETase.
-3️⃣ Analyze hydrogen bonds, hydrophobic contacts.
-
-🔹 Step 7.3: Interpret Binding Energy
-• More negative binding energy (e.g., -8 kcal/mol) → Stronger binding.
-• Less negative (e.g., -3 kcal/mol) → Weak or non-specific binding.
-
-🎯 Next Steps
-✅ If binding is strong → Move to Molecular Dynamics (MD) simulation to test stability.
-✅ If binding is weak → Try mutating PETase and re-dock.
-
-🚀 Summary
-🔹 Prepare PETase & ligand (remove waters, add hydrogens, assign charges).
-🔹 Convert to PDBQT format for docking.
-🔹 Set up docking grid in the active site.
-🔹 Run AutoDock Vina to predict binding.
-🔹 Analyze binding energy & interactions.
-
-📌 What’s Next?
-• Need help analyzing docking results?
-• Want to mutate PETase and re-dock?
-• Ready to run Molecular Dynamics (MD) in GROMACS?
-Let me know how you want to proceed! 😊
-            </pre>
+            </code></pre>
+            <p>Modify <code>center_x</code>, <code>center_y</code>, <code>center_z</code> based on your active site coordinates.</p>
+            <h3>Step 6.2: Run Docking Command</h3>
+            <p>Run the following command in command prompt (Windows) or terminal (Linux/Mac):</p>
+            <pre><code>vina --config config.txt --log docking.log</code></pre>
+            <p><strong>What happens here?</strong></p>
+            <ul>
+                <li>AutoDock Vina docks the ligand into PETase’s binding site.</li>
+                <li>Outputs the best binding pose and its binding energy (kcal/mol).</li>
+            </ul>
         </div>
-        <div class="note">Here is another important note.</div>
-        <div class="note">Don't forget to check this one.</div>
+
+        <div class="note">
+            <h2>7. Analyze Docking Results</h2>
+            <h3>Step 7.1: Check Output Files</h3>
+            <p>AutoDock Vina produces:</p>
+            <ul>
+                <li><code>docking.pdbqt</code> → Best docked pose.</li>
+                <li><code>docking.log</code> → Binding energy for each pose.</li>
+            </ul>
+            <h3>Step 7.2: Open in Chimera for Visualization</h3>
+            <pre>
+1. Open Chimera → Load PETase_clean.pdb.
+2. Load docking.pdbqt → Align with PETase.
+3. Analyze hydrogen bonds, hydrophobic contacts.
+            </pre>
+            <h3>Step 7.3: Interpret Binding Energy</h3>
+            <ul>
+                <li>More negative binding energy (e.g., -8 kcal/mol) → Stronger binding.</li>
+                <li>Less negative (e.g., -3 kcal/mol) → Weak or non-specific binding.</li>
+            </ul>
+        </div>
+
+        <div class="note">
+            <h2>Next Steps</h2>
+            <ul>
+                <li>If binding is strong → Move to Molecular Dynamics (MD) simulation to test stability.</li>
+                <li>If binding is weak → Try mutating PETase and re-dock.</li>
+            </ul>
+        </div>
+
+        <div class="note">
+            <h2>Summary</h2>
+            <ul>
+                <li>Prepare PETase & ligand (remove waters, add hydrogens, assign charges).</li>
+                <li>Convert to PDBQT format for docking.</li>
+                <li>Set up docking grid in the active site.</li>
+                <li>Run AutoDock Vina to predict binding.</li>
+                <li>Analyze binding energy & interactions.</li>
+            </ul>
+        </div>
+
+        <div class="note">
+            <h2>What’s Next?</h2>
+            <ul>
+                <li>Need help analyzing docking results?</li>
+                <li>Want to mutate PETase and re-dock?</li>
+                <li>Ready to run Molecular Dynamics (MD) in GROMACS?</li>
+            </ul>
+            <p>Let me know how you want to proceed! 😊</p>
+        </div>
     </div>
 </body>
 </html>
