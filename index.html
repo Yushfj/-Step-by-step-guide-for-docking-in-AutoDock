@@ -12,7 +12,7 @@
             background-color: #f4f4f4;
         }
         .note-container {
-            max-width: 600px;
+            max-width: 800px; /* Increased width for better readability */
             background: white;
             padding: 20px;
             border-radius: 10px;
@@ -24,59 +24,72 @@
             border-left: 4px solid #007bff;
             background: #e9f5ff;
         }
+        pre {
+            white-space: pre-wrap; /* Ensures text wraps properly */
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
     <div class="note-container">
         <h2>Step-by-step guide for docking in AutoDock</h2>
-        <div class="note">Step-by-Step Guide for Docking in AutoDock
+        <div class="note">
+            <pre>
+Step-by-Step Guide for Docking in AutoDock
 We will dock PETase (protein) with PET fragments (ligand) using AutoDock Tools (ADT) and AutoDock Vina.
-________________________________________
+
 📌 1. Install Required Software
 🔹 Download & install:
 ✅ AutoDock Tools (ADT) 1.5.7 → Used for structure preparation.
 ✅ AutoDock Vina → Performs the actual docking.
 ✅ Chimera → (Optional) Used for cleaning structures.
+
 📌 Download Links:
-•	AutoDock Tools & Vina: http://autodock.scripps.edu/
-•	Chimera: https://www.cgl.ucsf.edu/chimera/
-________________________________________
+• AutoDock Tools & Vina: <a href="http://autodock.scripps.edu/" target="_blank">http://autodock.scripps.edu/</a>
+• Chimera: <a href="https://www.cgl.ucsf.edu/chimera/" target="_blank">https://www.cgl.ucsf.edu/chimera/</a>
+
 📌 2. Prepare PETase (Protein) Structure
 🔹 Step 2.1: Get PETase Structure
-•	Download the PDB file for PETase from RCSB PDB (https://www.rcsb.org/)
-•	Example: Search "PETase" and choose a relevant structure (e.g., PDB ID: 5XJH).
+• Download the PDB file for PETase from RCSB PDB (<a href="https://www.rcsb.org/" target="_blank">https://www.rcsb.org/</a>)
+• Example: Search "PETase" and choose a relevant structure (e.g., PDB ID: 5XJH).
+
 🔹 Step 2.2: Clean PETase Using Chimera
 1️⃣ Open Chimera → File → Open PETase PDB file.
 2️⃣ Remove water molecules:
-•	Select → Residue → Type HOH → Delete.
+   • Select → Residue → Type HOH → Delete.
 3️⃣ Remove other ligands (if present):
-•	Select unwanted molecules and delete.
+   • Select unwanted molecules and delete.
 4️⃣ Add missing hydrogens:
-•	Tools → Structure Editing → Add Hydrogens.
+   • Tools → Structure Editing → Add Hydrogens.
 5️⃣ Save cleaned protein:
-•	File → Save As → PETase_clean.pdb
+   • File → Save As → PETase_clean.pdb
+
 📌 Why do this?
-•	Water molecules interfere with docking.
-•	Adding hydrogens ensures correct binding interactions.
-________________________________________
+• Water molecules interfere with docking.
+• Adding hydrogens ensures correct binding interactions.
+
 📌 3. Prepare Ligand (PET Fragment) Structure
 🔹 Step 3.1: Get the Ligand Structure
 You need a PET fragment, such as:
-•	BHET (Bis(2-hydroxyethyl) terephthalate)
-•	MHET (Mono(2-hydroxyethyl) terephthalate)
+• BHET (Bis(2-hydroxyethyl) terephthalate)
+• MHET (Mono(2-hydroxyethyl) terephthalate)
+
 📌 Sources:
-•	Search PubChem (https://pubchem.ncbi.nlm.nih.gov/)
-•	Download in SDF or PDB format
+• Search PubChem (<a href="https://pubchem.ncbi.nlm.nih.gov/" target="_blank">https://pubchem.ncbi.nlm.nih.gov/</a>)
+• Download in SDF or PDB format
+
 🔹 Step 3.2: Convert Ligand to PDB Format
 If your ligand is in SDF format, use Open Babel to convert it to PDB:
-obabel ligand.sdf -O ligand.pdb
+<code>obabel ligand.sdf -O ligand.pdb</code>
+
 🔹 Step 3.3: Optimize Ligand in Chimera
 1️⃣ Open ligand.pdb in Chimera.
 2️⃣ Add hydrogens: Tools → Structure Editing → Add Hydrogens.
 3️⃣ Minimize energy (to get a stable conformation):
-•	Tools → Structure Editing → Minimize Structure.
+   • Tools → Structure Editing → Minimize Structure.
 4️⃣ Save the optimized ligand.pdb.
-________________________________________
+
 📌 4. Convert Structures to PDBQT Format (AutoDock Format)
 🔹 Step 4.1: Convert PETase to PDBQT (Using AutoDock Tools)
 1️⃣ Open AutoDock Tools (ADT) → Load PETase_clean.pdb.
@@ -84,24 +97,26 @@ ________________________________________
 3️⃣ Assign Gasteiger Charges → Edit → Charges → Add Gasteiger.
 4️⃣ Remove water molecules (if not already done).
 5️⃣ Save as PETase.pdbqt.
+
 🔹 Step 4.2: Convert Ligand to PDBQT
 1️⃣ Open ADT → Load ligand.pdb.
 2️⃣ Add Hydrogens → Edit → Add Hydrogens.
 3️⃣ Add Torsion Flexibility:
-•	Grid → Set Number of Rotatable Bonds → Adjust torsions.
+   • Grid → Set Number of Rotatable Bonds → Adjust torsions.
 4️⃣ Save as ligand.pdbqt.
-________________________________________
+
 📌 5. Set Up Docking Grid Box
 🔹 Step 5.1: Define the Binding Site
 1️⃣ In ADT, Load PETase.pdbqt.
 2️⃣ Go to Grid → Grid Box.
 3️⃣ Adjust X, Y, Z coordinates to cover PETase's active site.
-•	Center should be around key catalytic residues.
+   • Center should be around key catalytic residues.
 4️⃣ Save the config.txt file with grid box dimensions.
-________________________________________
+
 📌 6. Run Docking with AutoDock Vina
 🔹 Step 6.1: Prepare Configuration File (config.txt)
 Create a text file with the following content:
+<code>
 receptor = PETase.pdbqt
 ligand = ligand.pdbqt
 center_x = 10.5
@@ -113,44 +128,51 @@ size_z = 20
 exhaustiveness = 8
 num_modes = 9
 energy_range = 4
+</code>
+
 📌 Modify center_x, center_y, center_z based on your active site coordinates.
+
 🔹 Step 6.2: Run Docking Command
 Run the following command in command prompt (Windows) or terminal (Linux/Mac):
-vina --config config.txt --log docking.log
+<code>vina --config config.txt --log docking.log</code>
+
 📌 What happens here?
-•	AutoDock Vina docks the ligand into PETase’s binding site.
-•	Outputs the best binding pose and its binding energy (kcal/mol).
-________________________________________
+• AutoDock Vina docks the ligand into PETase’s binding site.
+• Outputs the best binding pose and its binding energy (kcal/mol).
+
 📌 7. Analyze Docking Results
 🔹 Step 7.1: Check Output Files
 AutoDock Vina produces:
-•	docking.pdbqt → Best docked pose.
-•	docking.log → Binding energy for each pose.
+• docking.pdbqt → Best docked pose.
+• docking.log → Binding energy for each pose.
+
 🔹 Step 7.2: Open in Chimera for Visualization
 1️⃣ Open Chimera → Load PETase_clean.pdb.
 2️⃣ Load docking.pdbqt → Align with PETase.
 3️⃣ Analyze hydrogen bonds, hydrophobic contacts.
+
 🔹 Step 7.3: Interpret Binding Energy
-•	More negative binding energy (e.g., -8 kcal/mol) → Stronger binding.
-•	Less negative (e.g., -3 kcal/mol) → Weak or non-specific binding.
-________________________________________
+• More negative binding energy (e.g., -8 kcal/mol) → Stronger binding.
+• Less negative (e.g., -3 kcal/mol) → Weak or non-specific binding.
+
 🎯 Next Steps
 ✅ If binding is strong → Move to Molecular Dynamics (MD) simulation to test stability.
 ✅ If binding is weak → Try mutating PETase and re-dock.
-________________________________________
+
 🚀 Summary
 🔹 Prepare PETase & ligand (remove waters, add hydrogens, assign charges).
 🔹 Convert to PDBQT format for docking.
 🔹 Set up docking grid in the active site.
 🔹 Run AutoDock Vina to predict binding.
 🔹 Analyze binding energy & interactions.
-________________________________________
+
 📌 What’s Next?
-•	Need help analyzing docking results?
-•	Want to mutate PETase and re-dock?
-•	Ready to run Molecular Dynamics (MD) in GROMACS?
+• Need help analyzing docking results?
+• Want to mutate PETase and re-dock?
+• Ready to run Molecular Dynamics (MD) in GROMACS?
 Let me know how you want to proceed! 😊
-.</div>
+            </pre>
+        </div>
         <div class="note">Here is another important note.</div>
         <div class="note">Don't forget to check this one.</div>
     </div>
